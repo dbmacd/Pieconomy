@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block body %}
+    <main>
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for item in carousel_items %}
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                            {% if item.is_first %}class="active" aria-current="true"{% endif %}
+                            aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+            <div class="carousel-inner">
+                {% for item in carousel_items %}
+                    <div class="carousel-item {% if item.is_first %}active{% endif %}">
+                        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                             aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <rect width="100%" height="100%" fill="#777"/>
+                            <img src="media\{{ item.image_url }}" class="img-fluid" width="75%"
+                                 alt="{{ item.image_alt_text }}">
+                        </svg>
+                        <div class="container">
+                            <div class="carousel-caption {% if item.left_align %}text-start{% else %}text-end{% endif %}">
+                                <h1 class="{{ item.heading_text_style }}">{{ item.heading_text }}</h1>
+                                <p class="{{ item.blurb_text_style }}">{{ item.blurb_text }}</p>
+                                <p><a class="btn {{ item.button_style }}" href="{% url item.button_link %}">{{ item.button_text }}</a></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+        {#    HEADER FEATURE THINGS THAT ARE CIRCLE #}
+
+        <div class="container marketing pt-5 mt-5">
+            <div class="row">
+                {% for item in header_items %}
+                {% if item.show_on_header %}
+                <div class="col-lg-4">
+                    <img src="media\{{ item.pie_data.image_url }}" alt="{{ item.pie_data.image_alt_text }}">
+                    <h3 class="{{ item.heading_text_style }}" style="letter-spacing: -.05rem;">{{ item.pie_data.heading_text }}</h3>
+                    <p class="text-muted {{ item.blurb_text_style }}" style="letter-spacing: -.05rem;">{{ item.pie_data.blurb_text }}</p>
+                    <p><a class="btn {{ item.button_style }}" href="\item-detail\{{ item.pie_data.id }}">{{ item.button_text|safe }}</a></p>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- START THE FEATURETTES -->
+
+            {% for feature in featured_items %}
+                <hr class="featurette-divider">
+                <div class="row featurette">
+                    {% if feature.left_align %}
+                        <div class="col-md-7 order-md-2">
+                            <h2 class="featurette-heading">{{ feature.heading_dark_text }}
+                                <span class="text-muted">{{ feature.heading_light_text }}</span>
+                            </h2>
+                            <p class="lead">{{ feature.blurb_text }}</p>
+                        </div>
+                        <div class="col-md-5 order-md-1">
+                            <img src="media/{{ feature.image_url }}" width="500px" alt="{{ feature.image_alt_text }}">
+                        </div>
+                    {% else %}
+                        <div class="col-md-7">
+                            <h2 class="featurette-heading">{{ feature.heading_dark_text }}
+                                <span class="text-muted">{{ feature.heading_light_text }}</span>
+                            </h2>
+                            <p class="lead">{{ feature.blurb_text }}</p>
+                        </div>
+                        <div class="col-md-5 order-md-1">
+                            <img src="media/{{ feature.image_url }}" width="500px" alt="{{ feature.image_alt_text }}">
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <hr class="featurette-divider">
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="container">
+            <p class="float-end"><a href="#">Back to top</a></p>
+            {% now "Y" as current_year %}
+            <p>&copy; {% block translate %}{{ current_year }}{% endblock translate %} Anto Dunco Ltd. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
+            </p>
+        </footer>
+
+    </main>
+
+
+
+{% endblock %}

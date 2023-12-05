@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Order{% endblock %}
+{% block body %}
+    <section class="container pt-5 mt-5">
+        <h1>Order {{ order.id }}</h1>
+        <table class="table">
+            <tr>
+                <th>Quantity</th>
+                <th>Name</th>
+                <th>Cost</th>
+            </tr>
+            {% for item in order_items %}
+                <tr>
+                    <td>{{ item.quantity }}</td>
+                    <td><a href="{% url 'item-detail' item.item_id.id %}">{{ item.item_id.name }}</a></td>
+                    <td>{{ item.item_id.cost }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% if order.is_ordered %}
+            <a href="{% url 'order-reverse' order.id %}" class="btn btn-warning">Reverse</a>
+        {% else %}
+            <a href="{% url 'order-complete' order.id %}" class="btn btn-success">Order</a>
+        {% endif %}
+    </section>
+
+{% endblock %}

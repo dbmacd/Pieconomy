@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Calculator{% endblock %}
+
+{% block body %}
+    <section class="container mt-5 pt-5">
+    <div class="row justify-content-center mt-5">
+            <form class="col-6" method="post">
+                <h5 class="pb-3">How much did it really cost you!</h5>
+                {% csrf_token %}
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="text"
+                                   pattern="[0-9]{1,9}|[0-9]{1,9}\.[0-9]{0,5}"
+                                   class="form-control"
+                                   id="pie-calculator"
+                                   name="cost"
+                                   required
+                                   value="{{ calculator_data.pie_cost|default:"" }}">
+                            <label for="pie-calculator">Cost of goods (AUD)</label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <select class="form-select" id="floatingSelect" name="pie_id">
+                                {% if selected_pie %}
+                                    <option selected value="{{ selected_pie.id }}">{{ selected_pie.name }}</option>
+                                {% endif %}
+                                {% for pie in pie_list %}
+                                    <option value="{{ pie.id }}">{{ pie.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingSelect">Convert to cost of an</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-grid justify-content-end">
+                        <button type="submit" class="btn btn-outline-primary mt-1">Pieify</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    {% if calculator_data.can_afford and loaded %}
+    <section class="container mt-5">
+    Delicious pie detail, showing what you just missed out on e.g. {{ selected_pie.name }} tastes so good, you wish you had it.
+    </section>
+    <section class="container mt-5">
+        <div class="row justify-content-center mt-5">
+            <div class="" style="width: 30vw;">
+                {% if calculator_data.can_afford and loaded %}
+                    <canvas id="myChart" class=""></canvas>{% elif not calculator_data.can_afford and loaded %}
+                    <h2>Soz bro you a cheapie, spend more next time, cant even afford a pie!</h2>{% endif %}
+            </div>
+        </div>
+    </section>
+    <section class="container mt-5">
+            <h3>Count the pies you could've had..</h3>
+            <div class="mt-5">
+                {% for pie in calculator_data.range %}
+                    <img src="{% static 'img/favicon-32x32.png' %}" alt="Pie">
+                {% endfor %}
+                {% if calculator_data.range|length > 1000 %}
+                    over 1000....
+                {% endif %}
+            </div>
+    </section>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script>
+        const cost = document.getElementById("pie-calculator");
+        cost.addEventListener("input", function (event) {
+            if (cost.validity.patternMismatch) {
+                cost.setCustomValidity("Enter a valid value in AUD. (Up to $999,999,999)");
+            } else {
+                cost.setCustomValidity("");
+            }
+        });
+    </script>
+
+    <script>
+        let dataset_data = [{{ calculator_data.dataset }}];
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const labels = ['Pies', 'Remaining Money']
+        const data = {
+            labels: labels,
+
+            datasets: [{
+                borderColor: 'rgb(224,222,126)',
+                borderWidth: 5,
+                data: dataset_data,
+                backgroundColor: [
+                    'rgb(224,222,126)',
+                    'rgb(86,71,49)',
+
+                ],
+                hoverOffset: 4
+            }]
+        };
+        const myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data
+        })
+    </script>
+{% endblock %}

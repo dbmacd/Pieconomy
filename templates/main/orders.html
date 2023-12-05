@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load shopping_cart %}
+{% block title %}Orders{% endblock %}
+{% block body %}
+    <section class="container pt-5 mt-5">
+        {% if order_items and not current_order.is_ordered %}
+            <section class="">
+                <h1>Current Order {{ current_order.id }}</h1>
+                <table class="table table-borderless w-50">
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Name</th>
+                        <th>Cost</th>
+                        <th></th>
+                    </tr>
+                    {% for item in order_items %}
+                        <tr>
+                            <th>
+                                <a href="{% url 'item-add' item.item_id.id %}"><span class="material-icons text-muted">add</span></a>
+                                {{ item.quantity }}
+                                <a href="{% url 'item-remove' item.item_id.id %}"><span
+                                        class="material-icons text-muted">remove</span></a>
+                            </th>
+                            <td>{{ item.item_id.name }}</td>
+                            <td>${{ item.item_id.cost }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <th colspan="2" class="text-end">Sub-total</th>
+                        <td colspan="2">${{ current_order.sub_total }}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-end">Tax</th>
+                        <td colspan="2">${% tax current_order.sub_total %}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-end">Grand total</th>
+                        <td colspan="2">${% grand_total current_order.sub_total %}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end"><a href="{% url 'order-complete' current_order.id %}" class="btn btn-success">Order</a></td>
+                    </tr>
+                </table>
+            </section>
+        {% elif not order_items and not current_order.is_ordered %}
+            <h1>Nothing in your cart. <a class="text-decoration-none text-muted" href="{% url 'shop' %}">You need to fix
+                that?</a></h1>
+        {% elif not order_items and not current_order.is_ordered and not order_history %}
+            <h1>No orders yet. <a class="text-decoration-none text-muted" href="{% url 'shop' %}">Why not try one?</a>
+            </h1>
+        {% endif %}
+        {% if order_history %}
+            <section class="pt-5">
+                <h1>Order History</h1>
+                <table class="table">
+                    <tr>
+                        <th>Created</th>
+                        <th>Order ID</th>
+                        <th>Completed</th>
+                        <th></th>
+                    </tr>
+                    {% for ord in order_history %}
+                        <tr>
+                            <td>
+                                {{ ord.create_date_time }}
+                            </td>
+                            <td>
+                                <a href="{% url 'order' ord.id %}">{{ ord.id }}</a>
+                            </td>
+                            <td>
+                                {% if ord.is_ordered %}{{ ord.last_updated_date_time }}{% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'order-reverse' ord.id %}" class="btn btn-warning">Reverse</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </section>
+        {% endif %}
+    </section>
+{% endblock %}

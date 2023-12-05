@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block body %}
+    <section class="h-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100 ">
+                <div class="col-xl-10">
+                    <div class="card rounded-3 text-black">
+                        <div class="row g-0">
+                            <div class="col-lg-6">
+                                <div class="card-body p-md-5 mx-md-4">
+
+                                    <div class="text-center pb-5 pt-3">
+                                        <img src="/media/logo.png" style="width: 185px;" alt="logo">
+                                    </div>
+
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="form-floating mb-3">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="floatingInput"
+                                                   placeholder="username"
+                                                   name="username"
+                                                   required
+                                            >
+                                            <label for="floatingInput">Username</label>
+                                        </div>
+
+                                        <div class="form-floating">
+                                            <input type="password"
+                                                   class="form-control mb-5"
+                                                   id="floatingPassword"
+                                                   placeholder="Password"
+                                                   name="password"
+                                                   required
+                                            >
+                                            <label for="floatingPassword">Password</label>
+                                        </div>
+
+                                        <div class="text-center pt-1 mb-5 pb-1 ">
+                                            <button class="btn btn-success mb-3"
+                                                    type="submit">Log in
+                                            </button><br>
+                                            <a class="text-muted" href="{% url 'forgot-password' %}">Forgot password?</a>
+                                        </div>
+
+                                        <div class="d-flex align-items-center justify-content-center pb-4">
+                                            <p class="mb-0 me-2 ">Don't have an account?</p>
+                                            <a class="text-muted" href="{% url 'register' %}">Register now!</a>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 d-flex align-items-center bg-gradient bg-dark">
+                                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                                    <h4 class="mb-4">We are more than just a company</h4>
+                                    <p class="small mb-0">A pie is a baked dish which is usually made of a pastry dough casing that contains a filling of various sweet or savoury ingredients. Sweet pies may be filled with fruit (as in an apple pie), nuts (pecan pie), brown sugar (sugar pie), sweetened vegetables (rhubarb pie), or with thicker fillings based on eggs and dairy (as in custard pie and cream pie). Savoury pies may be filled with meat (as in a steak pie or a Jamaican patty), eggs and cheese (quiche) or a mixture of meat and vegetables (pot pie).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

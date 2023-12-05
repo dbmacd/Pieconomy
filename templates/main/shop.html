@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Shop{% endblock %}
+{#{% block breadcrumb %}#}
+{#<li class="breadcrumb-item active" aria-current="page">Shop</li>#}
+{#{% endblock %}#}
+{% block body %}
+    <section class="{% if order_items %}container {% else %}container{% endif %} mt-5">
+        <section class="row g-0">
+            <section class="col">
+                <h2 class="pb-3 text-center fw-bold">The Pie Shop</h2>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    {% for pie in pies|dictsort:'sort_order' %}
+                        {% if pie.show_in_shop %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="media\{{ pie.image_url }}"
+                                         class="card-img-top pt-4 p-2 align-self-center "
+                                         alt="{{ pie.image_alt_text }}" style="max-width: 200px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center fw-bold {{ pie.heading_text_style }}">{{ pie.heading_text }}</h5>
+                                        <p class="card-text {{ pie.blurb_text_style }}">{{ pie.blurb_text }}</p>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <header class="">
+                                                <p class="">Allergy Information</p>
+                                            </header>
+                                            <section class="pb-1">
+                                                {% for allergy in pie.allergens.all %}
+                                                    <span class="badge rounded-pill bg-{{ allergy.colour }}">{{ allergy.name }}</span>
+                                                {% endfor %}
+                                            </section>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="h5 mb-0">${{ pie.cost }}</div>
+                                        </li>
+                                    </ul>
+                                    <div class="card-footer text-end">
+                                        <a class="btn btn-sm {{ pie.button_style }}"
+                                           href="item-detail/{{ pie.id }}">Details</a>
+                                        {% for ord in order_items %}
+                                            {% if pie.id == ord.item_id.id %}
+                                                <a class="btn btn-sm btn-danger" href="{% url 'item-remove' pie.id %}">Delete</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <a class="btn btn-sm btn-success" href="{% url 'item-add' pie.id %}">Add</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+        </section>
+    </section>
+{% endblock %}
